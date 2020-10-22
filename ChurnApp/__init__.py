@@ -10,15 +10,6 @@ from flask import Flask
 from flask import render_template, request, jsonify
 
 
-with open(dir_path + "/models/churn_prediction.pickle", "rb") as f:
-    model = pickle.load(f)
-
-with open(dir_path + "/models/reason_prediction.pickle", "rb") as f:
-    model_reason = pickle.load(f)
-
-with open(dir_path + "/models/scaler.pickle", "rb") as f:
-    scaler = pickle.load(f)
-
 
 # Flask app setup
 def app_setup():
@@ -76,6 +67,15 @@ def predict():
             'total_intl_charge': None,
             'number_customer_service_calls': None,
             }
+
+    with open(dir_path + "/models/churn_prediction.pickle", "rb") as f:
+        model = pickle.load(f)
+
+    with open(dir_path + "/models/reason_prediction.pickle", "rb") as f:
+        model_reason = pickle.load(f)
+
+    with open(dir_path + "/models/scaler.pickle", "rb") as f:
+        scaler = pickle.load(f)
 
     for key in data.keys():
         try:
