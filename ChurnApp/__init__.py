@@ -1,6 +1,5 @@
 import os
-import joblib
-import sklearn
+import pickle
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -10,10 +9,15 @@ from flask import Flask
 
 from flask import render_template
 
-model = joblib.load(dir_path + "/models/churn_prediction.joblib")
-model_reason = joblib.load(dir_path + "/models/reason_prediction.joblib")
-scaler = joblib.load(dir_path + "/models/scaler.joblib")
 
+with open(dir_path + "/models/churn_prediction.pickle", "rb") as f:
+    model = pickle.load(f)
+
+with open(dir_path + "/models/reason_prediction.pickle", "rb") as f:
+    model_reason = pickle.load(f)
+
+with open(dir_path + "/models/scaler.pickle", "rb") as f:
+    scaler = pickle.load(f)
 
 # Flask app setup
 def app_setup():
