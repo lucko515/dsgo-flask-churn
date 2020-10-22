@@ -9,18 +9,18 @@ from flask import Flask
 
 from flask import render_template
 
+model = None
+model_reason = None
+scaler = None
 
-with open(dir_path + "/models/churn_prediction.pickle", "rb") as f:
-    model = pickle.load(f)
 
-with open(dir_path + "/models/reason_prediction.pickle", "rb") as f:
-    model_reason = pickle.load(f)
 
-with open(dir_path + "/models/scaler.pickle", "rb") as f:
-    scaler = pickle.load(f)
 
 # Flask app setup
 def app_setup():
+    global model
+    global model_reason
+    global scaler
 
     # Add administrative views here
     app = Flask(__name__)
@@ -28,6 +28,15 @@ def app_setup():
     # Register assets handler
     # from scooby.utils import assets
     app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)
+
+    with open(dir_path + "/models/churn_prediction.pickle", "rb") as f:
+        model = pickle.load(f)
+
+    with open(dir_path + "/models/reason_prediction.pickle", "rb") as f:
+        model_reason = pickle.load(f)
+
+    with open(dir_path + "/models/scaler.pickle", "rb") as f:
+        scaler = pickle.load(f)
 
     # Register API endpoints
     from ChurnApp.api import bp as api_bp
@@ -54,6 +63,8 @@ def api_example():
 @app.route("/dashboard-example", methods=['GET'])
 def ajax_example():
     return render_template("ajax-example.html")
+
+
 
 
 if __name__ == "__main__":
