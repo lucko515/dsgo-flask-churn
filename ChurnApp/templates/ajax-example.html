@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Churn Prediction Flask</title>
+
+        <!--   Bootstrap dependencies     -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/helper.css') }}">
+    </head>
+
+    <body>
+        <div class="churn-user-form">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-5">
+
+                         <form id="customerInfoForm">
+                              <div class="form-group">
+                                  <input type="number" step=".01" class="form-control item" id="account_length" name="account_length" placeholder="Account length in months">
+                              </div>
+
+                              <div class="form-group">
+                                <label class="control-label col-lg-12" for="international_plan">International plan:</label>
+                                <div class="col-sm-10">
+                                  <input type="radio" name="international_plan" id="international_plan-1" value="1">Yes</input>
+                                    <br>
+                                  <input type="radio" name="international_plan" id="international_plan-2" value="0" checked>No</input>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label class="control-label col-lg-12" for="international_plan">Voice Mail Plan:</label>
+                                <div class="col-sm-10">
+                                  <input type="radio" name="voice_mail_plan" id="voice_mail_plan-1" value="1">Yes</input>
+                                    <br>
+                                  <input type="radio" name="voice_mail_plan" id="voice_mail_plan-2" value="0" checked>No</input>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <input type="number" step=".01" class="form-control item" id="number_vmail_messages" name="number_vmail_messages" placeholder="Number of voice mails">
+                              </div>
+                              <div class="form-group">
+                                  <input type="text" class="form-control item" id="email" placeholder="Email">
+                              </div>
+                              <div class="form-group">
+                                 <input type="number" step=".01" class="form-control item" id="total_day_minutes" name="total_day_minutes" placeholder="Total day minutes">
+                              </div>
+                              <div class="form-group">
+                                <input type="number" step=".01" class="form-control item" id="total_day_calls" name="total_day_calls" placeholder="Total day calls">
+                              </div>
+
+                              <div class="form-group">
+                                <input type="number" step=".01" class="form-control item" placeholder="Total day charge" id="total_day_charge" name="total_day_charge">
+                              </div>
+
+                              <div class="form-group">
+                                <input type="number" step=".01" class="form-control item" placeholder="Total evening minutes" id="total_eve_minutes" name="total_eve_minutes">
+                              </div>
+
+                              <div class="form-group">
+                                <input type="number" step=".01" class="form-control item" placeholder="Total evening calls" id="total_eve_calls" name="total_eve_calls">
+                              </div>
+
+                              <div class="form-group">
+                                <input type="number" step=".01" class="form-control item" placeholder="Total evening charge" id="total_eve_charge" name="total_eve_charge">
+                              </div>
+
+                              <div class="form-group">
+                                <input type="number" step=".01" class="form-control item" placeholder="Total night minutes" id="total_night_minutes" name="total_night_minutes">
+                              </div>
+
+                              <div class="form-group">
+                                <input type="number" step=".01" class="form-control item" placeholder="Total night calls" id="total_night_calls" name="total_night_calls">
+                              </div>
+
+                              <div class="form-group">
+                                <input type="number" step=".01" class="form-control item" placeholder="Total night charge" id="total_night_charge" name="total_night_charge">
+                              </div>
+
+                              <div class="form-group">
+                                <input type="number" step=".01" class="form-control item" placeholder="Total international minutes" id="total_intl_minutes" name="total_intl_minutes">
+                              </div>
+
+                              <div class="form-group">
+                                <input type="number" step=".01" class="form-control item" placeholder="Total international minutes" id="total_intl_calls" name="total_intl_calls">
+                              </div>
+
+                              <div class="form-group">
+                                <input type="number" step=".01" class="form-control item" placeholder="Total international minutes" id="total_intl_charge" name="total_intl_charge">
+                              </div>
+
+                              <div class="form-group">
+                                <input type="number" step=".01" class="form-control item" placeholder="Number of customer service calls" id="number_customer_service_calls" name="number_customer_service_calls">
+                              </div>
+
+                              <div class="form-group">
+                                  <button type="button" id="ajax-btn" class="btn btn-block create-account">Predict customer</button>
+                              </div>
+                          </form>
+
+                    </div>
+
+                    <div class="col-lg-5">
+
+                        <h1 id="churn-results-text">
+                           Churn prediction:
+                        </h1>
+
+                        <h1>
+                            Churn reasons
+                        </h1>
+                        <canvas id="myChart" width="400" height="400"></canvas>
+                    </div>
+
+                </div>
+            </div>
+
+
+      </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+
+    <script>
+        let ctx = document.getElementById('myChart').getContext('2d');
+        let res;
+        $(document).ready(function () {
+            $("#ajax-btn").on("click", function (){
+               $.ajax({
+                        type: "POST",
+                        url: "/api/v1/predict",
+                        data: $("#customerInfoForm").serialize(),
+                        success: function(result) {
+                            res = result;
+                            $("#churn-results-text").text("Is churn - " + res['churn_prediction']);
+
+                            if (res['churn_prediction'] === "Yes") {
+                                var myChart = new Chart(ctx, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: ['Bad client service', 'High prices', 'Other'],
+                                        datasets: [{
+                                            data: res["churn_reason"],
+                                            backgroundColor: [
+                                                'rgba(255, 99, 132, 0.2)',
+                                                'rgba(54, 162, 235, 0.2)',
+                                                'rgba(255, 206, 86, 0.2)',
+                                            ],
+                                            borderColor: [
+                                                'rgba(255, 99, 132, 1)',
+                                                'rgba(54, 162, 235, 1)',
+                                                'rgba(255, 206, 86, 1)',
+                                            ],
+                                            borderWidth: 1
+                                        }]
+                                    },
+                                    options: {
+                                        scales: {
+                                            yAxes: [{
+                                                ticks: {
+                                                    beginAtZero: true
+                                                }
+                                            }]
+                                        }
+                                    }
+                                });
+                            }
+                        },
+                        error: function(result) {
+
+                        }
+                    });
+            });
+        })
+
+    </script>
+    </body>
+</html>

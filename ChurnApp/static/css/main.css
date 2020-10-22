@@ -1,0 +1,31 @@
+.churn-user-form{
+	padding: 50px 0;
+    background-color: aliceblue;
+}
+
+.churn-user-form form{
+    background-color: #fff;
+    max-width: 600px;
+    margin: auto;
+    padding: 50px 70px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.075);
+}
+
+.churn-user-form .item{
+	border-radius: 20px;
+    margin-bottom: 25px;
+    padding: 10px 20px;
+}
+
+.churn-user-form .create-account{
+    border-radius: 30px;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #235123;
+    border: none;
+    color: white;
+    margin-top: 20px;
+}

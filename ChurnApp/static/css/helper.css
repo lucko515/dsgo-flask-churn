@@ -1,0 +1,31 @@
+
+.churn-user-form form{
+    margin: 0!important;
+}
+
+a{
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+
+.btn-container{
+    margin: auto;
+    margin-left:42% !important;
+    margin-top: 15% !important;
+}
+
+.custom-button{
+    width: 13rem;
+    height: 3rem;
+    border-radius: 10px;
+    border: 3px solid #767676;
+    padding-top: 1rem;
+    text-align: center;
+    margin: 1rem;
+    color: #767676;
+}
+
+.custom-button:hover{
+    color: #000000;
+    border: 3px solid #000000;
+}
