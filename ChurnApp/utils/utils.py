@@ -1,7 +1,6 @@
 import os
 import pickle
 import datetime
-from dateutil import parser
 
 import ChurnApp
 from ChurnApp import dir_path
