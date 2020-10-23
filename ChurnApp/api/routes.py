@@ -1,6 +1,7 @@
 
 from ChurnApp.api import bp
-from ChurnApp import model, model_reason, scaler
+from ChurnApp.utils.utils import model_loader
+import ChurnApp
 
 import numpy as np
 from flask import request, jsonify
@@ -27,6 +28,8 @@ def predict():
             'number_customer_service_calls': None,
             }
 
+    model_loader()
+
     for key in data.keys():
         try:
             entry = int(request.form[key])
@@ -37,12 +40,12 @@ def predict():
 
     data = np.array(list(data.values())).reshape(1, -1)
 
-    scaled_values = scaler.transform(data)
-    churn_prediction = model.predict(scaled_values)
+    scaled_values = ChurnApp.scaler.transform(data)
+    churn_prediction = ChurnApp.model.predict(scaled_values)
 
     churn_reason = [[]]
     if churn_prediction[0] == 1:
-        churn_reason = model_reason.predict_proba(scaled_values)
+        churn_reason = ChurnApp.model_reason.predict_proba(scaled_values)
 
     return jsonify({"churn_prediction": "No" if churn_prediction[0] == 0 else "Yes", "churn_reason": list(churn_reason[0])})
 
