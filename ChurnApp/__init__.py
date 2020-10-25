@@ -3,19 +3,18 @@ import pickle
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-# Third party libraries
-from flask import Flask
 
-from flask import render_template
+# Third party libraries
+from flask import Flask, render_template
 
 last_loaded_models = None
 model = None
 model_reason = None
 scaler = None
 
+
 # Flask app setup
 def app_setup():
-
     # Add administrative views here
     app = Flask(__name__)
 
