@@ -48,7 +48,9 @@ pip install -r requirements.txt
 - Python 3
 `apt-get install python3-pip`
 
-9. Install depen for this project
+9. Install depen for this project 
+NOTE: __change dir to ChurnApp before executing this command__
+
 `pip install -r requirements.txt`
 
 
@@ -77,7 +79,7 @@ pip install -r requirements.txt
 ```
 
 12. Activate the ChurnApp
-`sudo a2ensite FlaskApp`
+`sudo a2ensite ChurnApp`
 
 13. Restart apache2 
 `service apache2 reload`
